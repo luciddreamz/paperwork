@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'default' => 'mysql',
+	'default' => getenv('OPENSHIFT_POSTGRESQL_DB_HOST') ? 'pgsql' : 'mysql',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -42,46 +42,43 @@ return array(
 	| so make sure you have the driver for your particular database of
 	| choice installed on your machine before you begin development.
 	|
+	| OpenShift Notes:
+	|   SQLite: https://developers.openshift.com/en/databases-sqlite.html
+	|   MySQL: https://developers.openshift.com/en/databases-mysql.html
+	|   PostgreSQL: https://developers.openshift.com/en/databases-postgresql.html
+	|
 	*/
 
 	'connections' => array(
 
 		'sqlite' => array(
 			'driver'   => 'sqlite',
-			'database' => __DIR__.'/../database/production.sqlite',
+			'database' => getenv('OPENSHIFT_PHP_DIR') ? storage_path().'production.sqlite' : __DIR__.'/../database/production.sqlite',
 			'prefix'   => '',
 		),
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => (getenv('DB_1_PORT_3306_TCP_ADDR') ? getenv('DB_1_PORT_3306_TCP_ADDR') : '127.0.0.1'),
-			'port'		  => '3306',
-			'database'  => 'paperwork',
-			'username'  => 'paperwork',
-			'password'  => 'paperwork',
+			'host'      => getenv('DB_1_PORT_3306_TCP_ADDR') ?: getenv('OPENSHIFT_MYSQL_DB_HOST') ?: '127.0.0.1',
+			'port'      => getenv('OPENSHIFT_MYSQL_DB_PORT') ?: 3306,
+			'database'  => getenv('OPENSHIFT_APP_NAME') ?: 'paperwork',
+			'username'  => getenv('OPENSHIFT_MYSQL_DB_USERNAME') ?: 'paperwork',
+			'password'  => getenv('OPENSHIFT_MYSQL_DB_PASSWORD') ?: 'paperwork',
 			'charset'   => 'utf8',
-			'collation' => 'utf8_general_ci',
+			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
 		),
 
 		'pgsql' => array(
 			'driver'   => 'pgsql',
-			'host'     => 'localhost',
-			'database' => 'forge',
-			'username' => 'forge',
-			'password' => '',
+			'host'     => getenv('OPENSHIFT_POSTGRESQL_DB_HOST') ?: 'localhost',
+			'port'     => getenv('OPENSHIFT_POSTGRESQL_DB_PORT') ?: 5432,
+			'database' => getenv('OPENSHIFT_APP_NAME') ?: 'paperwork',
+			'username' => getenv('OPENSHIFT_POSTGRESQL_DB_USERNAME') ?: 'paperwork',
+			'password' => getenv('OPENSHIFT_POSTGRESQL_DB_PASSWORD') ?: 'paperwork',
 			'charset'  => 'utf8',
 			'prefix'   => '',
 			'schema'   => 'public',
-		),
-
-		'sqlsrv' => array(
-			'driver'   => 'sqlsrv',
-			'host'     => 'localhost',
-			'database' => 'database',
-			'username' => 'root',
-			'password' => '',
-			'prefix'   => '',
 		),
 
 	),

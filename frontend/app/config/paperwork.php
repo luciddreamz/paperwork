@@ -23,7 +23,7 @@ return array(
 	*/
 	'access' => array(
 		'external' => array(
-			'dns'	=> 'paperwork.example.com',
+			'dns'	=> getenv('OPENSHIFT_APP_DNS') ?: 'paperwork.example.com',
 			'ports' => array(
 				'http'		 => 80,
 				'https' 	 => 443,
@@ -31,8 +31,7 @@ return array(
 			)
 		),
 	//  if same as external:
-	//	'internal' => null
-		'internal' => array(
+		'internal' => getenv('OPENSHIFT_PHP_DIR') ? null : array(
 			'dns' => 'localhost',
 			'ports' => array(
 				'http'		 => 8888,

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+
+set -e
+
+echo
+echo "Preparing repo directory for build..."
+echo 
+# Create symlink from public to frontend/public to use as document root
+ln -sf ${OPENSHIFT_REPO_DIR}frontend/public ${OPENSHIFT_REPO_DIR}public
+
+# Create symlink for composer to allow OpenShift's deploy process to find the files
+ln -sf ${OPENSHIFT_REPO_DIR}frontend/composer.json ${OPENSHIFT_REPO_DIR}composer.json
+ln -sf ${OPENSHIFT_REPO_DIR}frontend/composer.lock ${OPENSHIFT_REPO_DIR}composer.lock
+
+# Create symlink for package.json to allow OpenShift's deploy process to find the files
+ln -sf ${OPENSHIFT_REPO_DIR}frontend/package.json ${OPENSHIFT_REPO_DIR}package.json
